@@ -9,8 +9,8 @@ export const menuData: Menus[] = [
   },
   {
     id: '1',
-    title: '用户管理',
-    index: '/system-user',
+    title: '对话助手',
+    index: '/system-saler',
     icon: 'HomeFilled',
   },
   {

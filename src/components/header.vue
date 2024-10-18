@@ -2,7 +2,8 @@
   <div class="header">
     <!-- 折叠按钮 -->
     <div class="header-left">
-      <img class="logo" src="../assets/img/logo.svg" alt="" />
+      <!-- <img class="logo" src="../assets/img/logo.svg" alt="" /> -->
+      <img class="logo" src="../assets/img/logo.jpeg" alt="" />
       <div class="web-title">AI销售助手</div>
       <div class="collapse-btn" @click="collapseChage">
         <el-icon v-if="sidebar.collapse">

@@ -25,21 +25,21 @@ const routes: RouteRecordRaw[] = [
         component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
       },
       {
-        path: '/system-user',
-        name: 'system-user',
+        path: '/system-saler',
+        name: 'system-saler',
         meta: {
-          title: '用户管理',
+          title: '对话助手',
           permiss: '11',
           noAuth: true,
         },
-        component: () => import(/* webpackChunkName: "system-user" */ '../views/system/user.vue'),
+        component: () => import(/* webpackChunkName: "system-saler" */ '../views/system/saler.vue'),
       },
 
       {
         path: '/system-role',
         name: 'system-role',
         meta: {
-          title: '角色管理',
+          title: '进行中用户分析',
           permiss: '12',
           noAuth: true,
         },

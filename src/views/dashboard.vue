@@ -4,7 +4,7 @@
       <el-col :span="24">
         <el-card shadow="hover">
           <div class="card-header">
-            <p class="card-header-title">用户标签命中个数</p>
+            <p class="card-header-title">赢单用户分析</p>
             <p class="card-header-desc">各标签命中用户数量统计</p>
           </div>
           <v-chart class="chart" :option="userTagsOpt" @click="handleChartClick" />
