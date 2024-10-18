@@ -20,3 +20,10 @@ export const fetchRoleData = () => {
         method: 'get'
     });
 };
+
+export const fetchAIHealthScoreData = (pageIndex: number, pageSize: number) => {
+    return request({
+        url: './mock/ai-health-score.json',
+        method: 'get'
+    });
+};
