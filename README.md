@@ -1,80 +1,25 @@
-# vue-manage-system
+# AI 销售助手
 
-  <a href="https://github.com/lin-xin/vue-manage-system/releases">
-    <img src="https://img.shields.io/github/release/lin-xin/vue-manage-system.svg" alt="GitHub release">
-  </a>
-   <a href="https://github.com/lin-xin/vue-manage-system/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license">
-  </a>
+## 项目概述
 
-基于 Vue3 + pinia + Element Plus 的后台管理系统解决方案。[线上演示](https://lin-xin.github.io/example/vue-manage-system/)
+AI 销售助手是一个旨在帮助销售人员提高成单量的智能工具。通过利用人工智能技术，本项目为销售团队提供了强大的分析和辅助功能，以优化销售流程，提高工作效率。
 
-> Vue2 版本请看 [tag-V4.2.0](https://github.com/lin-xin/vue-manage-system/tree/V4.2.0)，带后台功能请看 [tsrpc-manage-system](https://github.com/lin-xin/tsrpc-manage-system)
+## 主要功能
 
-[文档地址](https://lin-xin.github.io/example/vuems-doc/)
-[English document](https://github.com/lin-xin/manage-system/blob/master/README_EN.md)
+### 1. 成单分析
 
-## 赞助商
+- 深入分析销售数据，识别成功案例的共同特征
+- 提供可视化报表，直观展示成单趋势和关键指标
+- 帮助销售人员了解自身表现，发现改进空间
 
-### 好问
+### 2. 对话助手
 
-[<img src="https://static.bestqa.net/logo/bestqa_haowen.png" width="220" height="100">](https://www.bestqa.net/home/index.html)
+- 实时为销售人员提供对话建议和话术推荐
+- 基于客户特征和历史交互数据，生成个性化的沟通策略
+- 帮助销售人员更好地应对各种对话场景，提高沟通效果
 
-专业问卷服务，一对一客服，按需定制
+### 3. 进行中用户分析
 
-## 支持作者
-
-请作者喝杯咖啡吧！(微信号：linxin_20)
-
-![微信扫一扫](https://lin-xin.github.io/images/weixin.jpg)
-
-## 前言
-
-该方案作为一套多功能的后台框架模板，适用于绝大部分的后台管理系统开发。基于 Vue3 + pinia + typescript，引用 Element Plus 组件库，方便开发。实现逻辑简单，适合外包项目，快速交付。
-
-## 功能
-
--   [x] Element Plus
--   [x] vite 3
--   [x] pinia
--   [x] typescript
--   [x] 登录/注册
--   [x] Dashboard
--   [x] 表格/表单
--   [x] 图表 :bar_chart:
--   [x] 富文本/markdown 编辑器
--   [x] 图片拖拽/裁剪上传
--   [x] 权限管理
--   [x] 三级菜单
--   [x] 自定义图标
--   [x] 主题切换
-
-## 安装步骤
-
-> 因为使用 vite3，node 版本需要 14.18+
-
-```
-git clone https://github.com/lin-xin/vue-manage-system.git      // 把模板下载到本地
-cd vue-manage-system    // 进入模板目录
-npm install         // 安装项目依赖，等待安装完成之后，安装失败可用 cnpm 或 yarn
-
-// 运行
-npm run dev
-
-// 执行构建命令，生成的dist文件夹放在服务器下即可访问
-npm run build
-```
-
-## 项目截图
-
-### 首页
-
-![Image text](https://github.com/lin-xin/manage-system/raw/master/screenshots/wms1.png)
-
-### 登录
-
-![Image text](https://github.com/lin-xin/manage-system/raw/master/screenshots/wms3.png)
-
-## License
-
-[MIT](https://github.com/lin-xin/vue-manage-system/blob/master/LICENSE)
+- 实时监控和分析正在进行的销售过程
+- 识别高潜力客户，提供及时跟进建议
+- 预测可能的销售结果，帮助销售人员调整策略
