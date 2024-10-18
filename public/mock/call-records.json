@@ -1,0 +1,15 @@
+{
+  "list": [
+    { "userId": "U001", "salesId": "S001", "callTime": "2023-05-01 10:00", "duration": 5, "result": "成功" },
+    { "userId": "U002", "salesId": "S002", "callTime": "2023-05-01 11:00", "duration": 3, "result": "未接通" },
+    { "userId": "U003", "salesId": "S001", "callTime": "2023-05-01 14:00", "duration": 8, "result": "成功" },
+    { "userId": "U004", "salesId": "S003", "callTime": "2023-05-01 16:00", "duration": 4, "result": "成功" },
+    { "userId": "U005", "salesId": "S002", "callTime": "2023-05-02 09:00", "duration": 6, "result": "成功" },
+    { "userId": "U006", "salesId": "S001", "callTime": "2023-05-02 11:00", "duration": 2, "result": "未接通" },
+    { "userId": "U007", "salesId": "S003", "callTime": "2023-05-02 14:00", "duration": 7, "result": "成功" },
+    { "userId": "U008", "salesId": "S002", "callTime": "2023-05-02 16:00", "duration": 5, "result": "成功" },
+    { "userId": "U009", "salesId": "S001", "callTime": "2023-05-03 10:00", "duration": 4, "result": "成功" },
+    { "userId": "U010", "salesId": "S003", "callTime": "2023-05-03 11:00", "duration": 3, "result": "未接通" }
+  ]
+}
+
