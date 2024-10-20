@@ -1,10 +1,60 @@
 {
-  "list": [
-    { "name": "涨价提醒", "value": 120 },
-    { "name": "优惠券用户", "value": 200 },
-    { "name": "高频用户", "value": 150 },
-    { "name": "新用户", "value": 80 },
-    { "name": "流失用户", "value": 70 }
+  "state": 10000,
+  "info": "Success",
+  "data": [
+    {
+      "tag": "需求确认",
+      "total": 7,
+      "reasonList": [
+        {
+          "reason": "我需要跟您简单了解一下孩子的情况，然后再跟您确定一下明天上课的时间。",
+          "user": "User-59221503",
+          "follower": "Follower-10572",
+          "callTime": "2024-05-10 12:18:06"
+        },
+        {
+          "reason": "然后咱们家目前12岁，6年级男孩女孩呢。",
+          "user": "User-59221503",
+          "follower": "Follower-10572",
+          "callTime": "2024-05-10 12:18:06"
+        }
+      ]
+    },
+    {
+      "tag": "个性化推荐",
+      "total": 16,
+      "reasonList": [
+        {
+          "reason": "我需要跟您简单了解一下孩子的情况，然后再跟您确定一下明天上课的时间。",
+          "user": "User-59221503",
+          "follower": "Follower-10572",
+          "callTime": "2024-05-10 12:18:06"
+        },
+        {
+          "reason": "然后咱们家目前12岁，6年级男孩女孩呢。",
+          "user": "User-59221503",
+          "follower": "Follower-10572",
+          "callTime": "2024-05-10 12:18:06"
+        }
+      ]
+    },
+    {
+      "tag": "客户成功案例分享",
+      "total": 14,
+      "reasonList": [
+        {
+          "reason": "我需要跟您简单了解一下孩子的情况，然后再跟您确定一下明天上课的时间。",
+          "user": "User-59221503",
+          "follower": "Follower-10572",
+          "callTime": "2024-05-10 12:18:06"
+        },
+        {
+          "reason": "然后咱们家目前12岁，6年级男孩女孩呢。",
+          "user": "User-59221503",
+          "follower": "Follower-10572",
+          "callTime": "2024-05-10 12:18:06"
+        }
+      ]
+    }
   ]
 }
-

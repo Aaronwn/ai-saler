@@ -1,5 +1,19 @@
 <template>
   <div>
+    <!-- 赢单销售分析 -->
+    <el-row :gutter="20" class="mgb20">
+      <el-col :span="24">
+        <el-card shadow="hover">
+          <div class="card-header">
+            <p class="card-header-title">赢单销售分析</p>
+            <p class="card-header-desc">各标签命中数量统计</p>
+          </div>
+          <v-chart class="chart" :option="salesTagsOpt" @click="(params) => handleChartClick('sale', params)" />
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 赢单用户分析 -->
     <el-row :gutter="20" class="mgb20">
       <el-col :span="24">
         <el-card shadow="hover">
@@ -7,7 +21,7 @@
             <p class="card-header-title">赢单用户分析</p>
             <p class="card-header-desc">各标签命中用户数量统计</p>
           </div>
-          <v-chart class="chart" :option="userTagsOpt" @click="handleChartClick" />
+          <v-chart class="chart" :option="userTagsOpt" @click="(params) => handleChartClick('user', params)" />
         </el-card>
       </el-col>
     </el-row>
@@ -17,50 +31,48 @@
       :title="selectedTag ? `${selectedTag}标签通话记录` : '通话记录'"
       size="50%"
       direction="rtl">
-      <el-table :data="callRecords" style="width: 100%">
-        <el-table-column prop="userId" label="用户ID" width="180" />
-        <el-table-column prop="salesId" label="销售ID" width="180" />
-        <el-table-column prop="callTime" label="通话时间" />
-        <el-table-column prop="duration" label="通话时长（分钟）" />
-        <el-table-column prop="result" label="通话结果" />
+      <el-table :data="selectedTagRecords" style="width: 100%">
+        <el-table-column prop="user" label="用户ID" width="120" />
+        <el-table-column prop="follower" label="跟进人ID" width="120" />
+        <el-table-column prop="callTime" label="通话时间" width="180" />
+        <el-table-column prop="reason" label="原因" />
       </el-table>
     </el-drawer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { BarChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, LegendComponent, TitleComponent } from 'echarts/components';
 import VChart from 'vue-echarts';
 import type { EChartsOption } from 'echarts';
-import { fetchUserTagsData, fetchCallRecords } from '@/api';
+import { fetchUserTagsData } from '@/api';
 
 use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent, TitleComponent]);
 
+// 销售标签数据
+const salesTagsData = ref([]);
 // 用户标签数据
 const userTagsData = ref([]);
-
-// 通话记录数据
-const callRecords = ref([]);
 
 // 抽屉相关
 const drawerVisible = ref(false);
 const selectedTag = ref('');
+const selectedRole = ref('');
 
-const userTagsOpt = ref<EChartsOption>({
+const createChartOption = (color: string): EChartsOption => ({
   tooltip: {
     trigger: 'axis',
-    axisPointer: {
-      type: 'shadow',
-    },
+    axisPointer: { type: 'shadow' },
   },
   grid: {
     left: '3%',
-    right: '4%',
-    bottom: '15%', // 增加底部边距
+    right: '5%', // 增加右侧边距
+    bottom: '15%',
+    top: '10%', // 增加顶部边距
     containLabel: true,
   },
   xAxis: {
@@ -68,10 +80,8 @@ const userTagsOpt = ref<EChartsOption>({
     data: [],
     axisLabel: {
       interval: 0,
-      rotate: 45, // 增加旋转角度
-      textStyle: {
-        fontSize: 12, // 可以根据需要调整字体大小
-      },
+      rotate: 45,
+      textStyle: { fontSize: 12 },
     },
   },
   yAxis: {
@@ -83,66 +93,90 @@ const userTagsOpt = ref<EChartsOption>({
       name: '命中个数',
       type: 'bar',
       data: [],
-      itemStyle: {
-        color: '#3aa1ff',
-      },
-      barWidth: '40%', // 调整柱子宽度
+      itemStyle: { color: color },
+      barWidth: '40%',
     },
   ],
 });
 
-// 获取用户标签数据
-const getUserTagsData = async () => {
-  try {
-    const res = await fetchUserTagsData();
-    userTagsData.value = res.data.list.sort((a, b) => b.value - a.value);
-    updateChartData();
-  } catch (error) {
-    console.error('获取用户标签数据失败:', error);
-  }
-};
+const salesTagsOpt = ref<EChartsOption>(createChartOption('#3aa1ff')); // 蓝色
+const userTagsOpt = ref<EChartsOption>(createChartOption('#4caf50')); // 绿色
 
-// 获取通话记录数据
-const getCallRecords = async () => {
+// 获取标签数据
+const getTagsData = async (role: string) => {
   try {
-    const res = await fetchCallRecords();
-    callRecords.value = res.data.list;
+    const res = await fetchUserTagsData({ role });
+    if (res.data.state === 10000) {
+      if (role === 'sale') {
+        salesTagsData.value = res.data.data;
+        updateChartData(salesTagsOpt.value, salesTagsData.value);
+      } else {
+        userTagsData.value = res.data.data;
+        updateChartData(userTagsOpt.value, userTagsData.value);
+      }
+    } else {
+      console.error(`获取${role}标签数据失败:`, res.info);
+    }
   } catch (error) {
-    console.error('获取通话记录数据失败:', error);
+    console.error(`获取${role}标签数据失败:`, error);
   }
 };
 
 // 更新图表数据
-const updateChartData = () => {
-  userTagsOpt.value.xAxis.data = userTagsData.value.map(item => item.name);
-  userTagsOpt.value.series[0].data = userTagsData.value.map(item => item.value);
+const updateChartData = (chartOpt: EChartsOption, data: any[]) => {
+  chartOpt.xAxis.data = data.map(item => item.tag);
+  chartOpt.series[0].data = data.map(item => item.total);
 
   // 动态调整图表高度
-  const chartHeight = Math.max(400, userTagsData.value.length * 30);
-  document.querySelector('.chart').style.height = `${chartHeight}px`;
-};
+  const chartHeight = Math.max(400, data.length * 30);
+  const chartElements = document.querySelectorAll('.chart');
+  chartElements.forEach((element: HTMLElement) => {
+    element.style.height = `${chartHeight}px`;
+  });
 
-// 处理图表点击事件
-const handleChartClick = (params: any) => {
-  if (params.componentType === 'series') {
-    selectedTag.value = params.name;
-    drawerVisible.value = true;
-    // 这里可以根据选中的标签筛选对应的通话记录
-    // 目前使用的是所有通话记录
+  // 根据数据长度动态调整右侧边距
+  if (data.length > 5) {
+    chartOpt.grid.right = '8%';
+  } else {
+    chartOpt.grid.right = '5%';
   }
 };
 
+// 处理图表点击事件
+const handleChartClick = (role: string, params: any) => {
+  if (params.componentType === 'series') {
+    selectedTag.value = params.name;
+    selectedRole.value = role;
+    drawerVisible.value = true;
+    console.log('Selected tag:', selectedTag.value);
+    console.log('Selected role:', selectedRole.value);
+  }
+};
+
+// 计算属性：根据选中的标签筛选对应的通话记录
+const selectedTagRecords = computed(() => {
+  const data = selectedRole.value === 'sale' ? salesTagsData.value : userTagsData.value;
+  const selectedData = data.find(item => item.tag === selectedTag.value);
+  return selectedData ? selectedData.reasonList : [];
+});
+
+// 添加日志输出，用于调试
+watch(selectedTagRecords, (newValue) => {
+  console.log('Selected tag records:', newValue);
+});
+
 onMounted(() => {
-  getUserTagsData();
-  getCallRecords();
+  getTagsData('sale');
+  getTagsData('user');
 });
 </script>
 
 <style scoped>
 .chart {
   width: 100%;
-  min-height: 400px; /* 设置最小高度 */
-  height: auto; /* 允许高度自动调整 */
+  min-height: 400px;
+  height: auto;
+  margin-bottom: 20px; // 增加图表底部边距
 }
 
 .card-header {
@@ -159,5 +193,9 @@ onMounted(() => {
 .card-header-desc {
   font-size: 14px;
   color: #999;
+}
+
+.mgb20 {
+  margin-bottom: 20px;
 }
 </style>
