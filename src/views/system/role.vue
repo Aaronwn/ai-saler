@@ -2,8 +2,17 @@
   <div>
     <div class="container">
       <TableCustom :columns="columns" :tableData="tableData" :total="page.total" :page-change="changePage">
-        <template #aiScore="{ rows }">
-          <el-progress :percentage="rows.aiScore" :color="getScoreColor(rows.aiScore)" />
+        <template #adviceList="slotProps">
+          <el-popover
+            placement="top-start"
+            title="建议列表"
+            :width="300"
+            trigger="hover"
+            :content="getAdviceContent(slotProps)">
+            <template #reference>
+              <el-button type="text">查看建议</el-button>
+            </template>
+          </el-popover>
         </template>
       </TableCustom>
     </div>
@@ -14,20 +23,25 @@
 import { ref, reactive } from 'vue';
 import { fetchAIHealthScoreData } from '@/api'; // 假设您有这个 API 函数
 import TableCustom from '@/components/table-custom.vue';
-import { Refresh } from '@element-plus/icons-vue';
 
 interface HealthScore {
-  id: number;
-  name: string;
-  aiScore: number;
+  user: string;
+  follower: string;
+  callTime: string;
+  callId: string;
+  healthScore: number;
+  adviceList: string[];
 }
 
 // 表格相关
 const columns = ref([
   { type: 'index', label: '序号', width: 55, align: 'center' },
-  { prop: 'id', label: 'ID', width: 80 },
-  { prop: 'name', label: '姓名' },
-  { prop: 'aiScore', label: 'AI健康度评分' },
+  { prop: 'user', label: '用户' },
+  { prop: 'follower', label: '跟进人' },
+  { prop: 'callTime', label: '通话时间' },
+  { prop: 'callId', label: '通话ID' },
+  { prop: 'healthScore', label: '健康分数' },
+  { prop: 'adviceList', label: '沟通建议' },
 ]);
 
 const page = reactive({
@@ -41,8 +55,8 @@ const tableData = ref<HealthScore[]>([]);
 const getData = async () => {
   try {
     const res = await fetchAIHealthScoreData(page.index, page.size);
-    console.log(123, res);
-    tableData.value = res.data.list;
+    console.log(123, res.data.data);
+    tableData.value = res.data.data;
     page.total = res.data.pageTotal;
   } catch (error) {
     console.error('获取数据失败:', error);
@@ -56,10 +70,15 @@ const changePage = (val: number) => {
   getData();
 };
 
-const getScoreColor = (score: number) => {
-  if (score < 60) return '#F56C6C';
-  if (score < 80) return '#E6A23C';
-  return '#67C23A';
+const getAdviceContent = (slotProps: any) => {
+  console.log('Slot props:', slotProps);
+  const row = slotProps.rows; // 直接使用 rows，不需要通过索引访问
+  console.log('Row data:', row);
+
+  if (!row || !row.adviceList || row.adviceList.length === 0) {
+    return '暂无建议';
+  }
+  return row.adviceList.join('\n');
 };
 </script>
 

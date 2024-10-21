@@ -1,5 +1,21 @@
 <template>
   <div>
+    <!-- 筛选条件 -->
+    <div class="filter-container">
+      <el-select v-model="country" placeholder="请选择国家" class="filter-item country-select">
+        <el-option label="境内" value="domestic" />
+        <el-option label="境外" value="overseas" disabled />
+      </el-select>
+      <el-date-picker
+        v-model="dateRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        format="YYYY-MM-DD"
+        value-format="YYYY-MM-DD"
+        class="filter-item date-range-picker" />
+    </div>
     <!-- 赢单销售分析 -->
     <el-row :gutter="20" class="mgb20">
       <el-col :span="24">
@@ -8,7 +24,7 @@
             <p class="card-header-title">赢单销售分析</p>
             <p class="card-header-desc">各标签命中数量统计</p>
           </div>
-          <v-chart class="chart" :option="salesTagsOpt" @click="(params) => handleChartClick('sale', params)" />
+          <v-chart class="chart" :option="salesTagsOpt" @click="params => handleChartClick('sale', params)" />
         </el-card>
       </el-col>
     </el-row>
@@ -21,7 +37,7 @@
             <p class="card-header-title">赢单用户分析</p>
             <p class="card-header-desc">各标签命中用户数量统计</p>
           </div>
-          <v-chart class="chart" :option="userTagsOpt" @click="(params) => handleChartClick('user', params)" />
+          <v-chart class="chart" :option="userTagsOpt" @click="params => handleChartClick('user', params)" />
         </el-card>
       </el-col>
     </el-row>
@@ -52,6 +68,12 @@ import type { EChartsOption } from 'echarts';
 import { fetchUserTagsData } from '@/api';
 
 use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent, TitleComponent]);
+
+// 国家筛选
+const country = ref('domestic');
+
+// 日期范围
+const dateRange = ref([]);
 
 // 销售标签数据
 const salesTagsData = ref([]);
@@ -105,7 +127,13 @@ const userTagsOpt = ref<EChartsOption>(createChartOption('#4caf50')); // 绿色
 // 获取标签数据
 const getTagsData = async (role: string) => {
   try {
-    const res = await fetchUserTagsData({ role });
+    const params = {
+      role,
+      country: country.value,
+      start: dateRange.value[0],
+      end: dateRange.value[1],
+    };
+    const res = await fetchUserTagsData(params);
     if (res.data.state === 10000) {
       if (role === 'sale') {
         salesTagsData.value = res.data.data;
@@ -161,8 +189,14 @@ const selectedTagRecords = computed(() => {
 });
 
 // 添加日志输出，用于调试
-watch(selectedTagRecords, (newValue) => {
+watch(selectedTagRecords, newValue => {
   console.log('Selected tag records:', newValue);
+});
+
+// 监听筛选条件变化
+watch([country, dateRange], () => {
+  getTagsData('sale');
+  getTagsData('user');
 });
 
 onMounted(() => {
@@ -176,7 +210,7 @@ onMounted(() => {
   width: 100%;
   min-height: 400px;
   height: auto;
-  margin-bottom: 20px; // 增加图表底部边距
+  margin-bottom: 20px;
 }
 
 .card-header {
@@ -197,5 +231,26 @@ onMounted(() => {
 
 .mgb20 {
   margin-bottom: 20px;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f5f7fa;
+  border-radius: 4px;
+}
+
+.filter-item {
+  margin-right: 15px;
+}
+
+.country-select {
+  width: 120px;
+}
+
+.date-range-picker {
+  width: 320px;
 }
 </style>
