@@ -4,7 +4,7 @@ import request from '../utils/request';
 export const fetchAIHealthScoreData = (page, pageSize) => {
   return request({
     // url: './mock/ai-health-score.json',
-    url: '/AiTopSales/follow',
+    url: '/api/AiTopSales/follow',
     method: 'get',
   });
 };
@@ -13,7 +13,7 @@ export const fetchAIHealthScoreData = (page, pageSize) => {
 // 用户标签数据(看板),params: object:{role: sale | user, country: string, start: string, end: string}
 export const fetchUserTagsData = (params) => {
   return request({
-    url: `/AiTopSales/tags?role=${params.role}`,
+    url: `/api/AiTopSales/tags?role=${params.role}`,
     method: 'get',
   });
 };
@@ -21,7 +21,7 @@ export const fetchUserTagsData = (params) => {
 // 获取AI聊天建议,如参为content:聊天记录
 export const fetchAIChatAdvice = (params) => {
   return request({
-    url: '/AiTopSales/suggestion',
+    url: '/api/AiTopSales/suggestion',
     method: 'post',
     data: JSON.stringify(params),
   });
