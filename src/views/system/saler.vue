@@ -1,7 +1,7 @@
 <template>
   <div class="chat-assistant">
     <div class="chat-area user-side">
-      <div class="chat-window">
+      <div class="chat-window" ref="userChatWindow">
         <div
           v-for="(message, index) in chatHistory"
           :key="index"
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="chat-area sales-side">
-      <div class="chat-window">
+      <div class="chat-window" ref="salesChatWindow">
         <div
           v-for="(message, index) in chatHistory"
           :key="index"
@@ -60,27 +60,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, nextTick, watch, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { fetchAIChatAdvice } from '../../api/index'; // Import the function
 
-const chatHistory = ref([
-  // { type: 'user', content: '你好' },
-  // { type: 'sales', content: '你好，请问有什么问题' },
-]);
-
+const chatHistory = ref([]);
 const userMessage = ref('');
 const salesMessage = ref('');
 const aiSuggestion = ref('');
+const userChatWindow = ref(null);
+const salesChatWindow = ref(null);
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (userChatWindow.value) {
+      userChatWindow.value.scrollTop = userChatWindow.value.scrollHeight;
+    }
+    if (salesChatWindow.value) {
+      salesChatWindow.value.scrollTop = salesChatWindow.value.scrollHeight;
+    }
+  });
+};
 
 const sendUserMessage = async () => {
   if (userMessage.value.trim()) {
     chatHistory.value.push({ type: 'user', content: userMessage.value });
+    scrollToBottom();
 
     try {
-      const res = await fetchAIChatAdvice({ content: chatHistory.value }); // Call the API
-      console.log(111, chatHistory.value);
-      aiSuggestion.value = res.data.data.suggestion; // Update AI suggestion
+      const res = await fetchAIChatAdvice({ content: chatHistory.value });
+      aiSuggestion.value = res.data.data.suggestion;
     } catch (error) {
       ElMessage.error('获取AI建议失败');
     }
@@ -92,9 +101,20 @@ const sendUserMessage = async () => {
 const sendSalesMessage = () => {
   if (salesMessage.value.trim()) {
     chatHistory.value.push({ type: 'sales', content: salesMessage.value });
+    scrollToBottom();
     salesMessage.value = '';
   }
 };
+
+// Watch for changes in chatHistory and scroll both sides to bottom
+watch(chatHistory, () => {
+  scrollToBottom();
+}, { deep: true });
+
+// Scroll both sides to bottom on initial load
+onMounted(() => {
+  scrollToBottom();
+});
 
 const newline = e => {
   const target = e.target;
@@ -135,8 +155,9 @@ const newline = e => {
 .chat-window {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 15px;
+  margin-bottom: 10px;
+  scroll-behavior: smooth;
 }
 
 .message {
