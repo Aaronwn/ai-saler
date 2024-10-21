@@ -62,12 +62,18 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { BarChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, LegendComponent, TitleComponent } from 'echarts/components';
+import {
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  TitleComponent,
+  DataZoomComponent,
+} from 'echarts/components';
 import VChart from 'vue-echarts';
 import type { EChartsOption } from 'echarts';
 import { fetchUserTagsData } from '@/api';
 
-use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent, TitleComponent]);
+use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent, TitleComponent, DataZoomComponent]);
 
 // 国家筛选
 const country = ref('domestic');
@@ -92,18 +98,35 @@ const createChartOption = (color: string): EChartsOption => ({
   },
   grid: {
     left: '3%',
-    right: '5%', // 增加右侧边距
+    right: '4%',
     bottom: '15%',
-    top: '10%', // 增加顶部边距
+    top: '5%',
     containLabel: true,
   },
+  dataZoom: [
+    {
+      type: 'slider',
+      show: true,
+      xAxisIndex: [0],
+      start: 0,
+      end: 100,
+    },
+    {
+      type: 'inside',
+      xAxisIndex: [0],
+      start: 0,
+      end: 100,
+    },
+  ],
   xAxis: {
     type: 'category',
     data: [],
     axisLabel: {
       interval: 0,
       rotate: 45,
-      textStyle: { fontSize: 12 },
+      textStyle: { fontSize: 10 },
+      align: 'right',
+      margin: 10,
     },
   },
   yAxis: {
@@ -116,7 +139,7 @@ const createChartOption = (color: string): EChartsOption => ({
       type: 'bar',
       data: [],
       itemStyle: { color: color },
-      barWidth: '40%',
+      barWidth: '50%',
     },
   ],
 });
@@ -156,17 +179,23 @@ const updateChartData = (chartOpt: EChartsOption, data: any[]) => {
   chartOpt.series[0].data = data.map(item => item.total);
 
   // 动态调整图表高度
-  const chartHeight = Math.max(400, data.length * 30);
+  const baseHeight = 400; // 增加基础高度
+  const itemHeight = 15;
+  const maxHeight = 800; // 增加最大高度
+  const calculatedHeight = Math.min(Math.max(baseHeight, data.length * itemHeight), maxHeight);
+
   const chartElements = document.querySelectorAll('.chart');
   chartElements.forEach((element: HTMLElement) => {
-    element.style.height = `${chartHeight}px`;
+    element.style.height = `${calculatedHeight}px`;
   });
 
-  // 根据数据长度动态调整右侧边距
-  if (data.length > 5) {
-    chartOpt.grid.right = '8%';
+  // 根据数据长度动态调整初始缩放范围
+  if (data.length > 20) {
+    chartOpt.dataZoom[0].end = (20 / data.length) * 100;
+    chartOpt.dataZoom[1].end = (20 / data.length) * 100;
   } else {
-    chartOpt.grid.right = '5%';
+    chartOpt.dataZoom[0].end = 100;
+    chartOpt.dataZoom[1].end = 100;
   }
 };
 
@@ -209,6 +238,7 @@ onMounted(() => {
 .chart {
   width: 100%;
   min-height: 400px;
+  max-height: 800px;
   height: auto;
   margin-bottom: 20px;
 }
@@ -230,7 +260,7 @@ onMounted(() => {
 }
 
 .mgb20 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .filter-container {
