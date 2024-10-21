@@ -98,9 +98,9 @@ const createChartOption = (color: string): EChartsOption => ({
   },
   grid: {
     left: '3%',
-    right: '4%',
+    right: '8%', // 增加右侧间距
     bottom: '15%',
-    top: '5%',
+    top: '8%',
     containLabel: true,
   },
   dataZoom: [
@@ -131,7 +131,10 @@ const createChartOption = (color: string): EChartsOption => ({
   },
   yAxis: {
     type: 'value',
-    name: '命中个数',
+    name: '', // 移除 y 轴标题
+    axisLabel: {
+      margin: 2,
+    },
   },
   series: [
     {
@@ -179,9 +182,9 @@ const updateChartData = (chartOpt: EChartsOption, data: any[]) => {
   chartOpt.series[0].data = data.map(item => item.total);
 
   // 动态调整图表高度
-  const baseHeight = 400; // 增加基础高度
+  const baseHeight = 450;
   const itemHeight = 15;
-  const maxHeight = 800; // 增加最大高度
+  const maxHeight = 800;
   const calculatedHeight = Math.min(Math.max(baseHeight, data.length * itemHeight), maxHeight);
 
   const chartElements = document.querySelectorAll('.chart');
@@ -237,7 +240,7 @@ onMounted(() => {
 <style scoped>
 .chart {
   width: 100%;
-  min-height: 400px;
+  min-height: 450px;
   max-height: 800px;
   height: auto;
   margin-bottom: 20px;

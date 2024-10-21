@@ -1,9 +1,10 @@
 import request from '../utils/request';
 
 // 进行中用户分析列表
-export const fetchAIHealthScoreData = (pageIndex: number, pageSize: number) => {
+export const fetchAIHealthScoreData = (page: number, pageSize: number) => {
   return request({
-    url: './mock/ai-health-score.json',
+    // url: './mock/ai-health-score.json',
+    url: '/AiTopSales/follow',
     method: 'get',
   });
 };
