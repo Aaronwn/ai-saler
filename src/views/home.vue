@@ -43,7 +43,7 @@ const tabs = useTabsStore();
   transition: left 0.3s ease-in-out;
   background: #eef0fc;
   overflow: hidden;
-  height: calc(100vh - 70px);
+  /* height: calc(100vh - 70px); */
 }
 
 .content {
