@@ -19,7 +19,7 @@
           v-model="userMessage"
           type="textarea"
           :rows="2"
-          placeholder="请输入消息"
+          placeholder="请输入用户消息"
           @keydown.enter.exact.prevent="sendUserMessage"
           @keydown.enter.shift.exact="newline"></el-input>
         <el-button type="primary" @click="sendUserMessage">发送</el-button>
@@ -44,22 +44,16 @@
           v-model="salesMessage"
           type="textarea"
           :rows="2"
-          placeholder="请输入消息"
+          placeholder="请输入销售消息"
           @keydown.enter.exact.prevent="sendSalesMessage"
           @keydown.enter.shift.exact="newline"></el-input>
         <el-button type="primary" @click="sendSalesMessage">发送</el-button>
       </div>
       <div class="ai-suggestion">
-        <div class="suggestion-header">
-          <span>AI 建议</span>
-          <el-button type="text" @click="copyAISuggestion">复制</el-button>
-        </div>
-        <el-input
-          type="textarea"
-          :rows="3"
-          placeholder="AI 建议将显示在这里"
-          v-model="aiSuggestion"
-          readonly></el-input>
+        <div
+          class="ai-suggestion-content"
+          v-text="aiSuggestion || 'AI 建议将显示在这里'"
+        ></div>
       </div>
     </div>
   </div>
@@ -111,11 +105,11 @@ const newline = e => {
   target.selectionStart = target.selectionEnd = start + 1;
 };
 
-const copyAISuggestion = () => {
-  navigator.clipboard.writeText(aiSuggestion.value).then(() => {
-    ElMessage.success('AI 建议已复制到剪贴板');
-  });
-};
+// const copyAISuggestion = () => {
+//   navigator.clipboard.writeText(aiSuggestion.value).then(() => {
+//     ElMessage.success('AI 建议已复制到剪贴板');
+//   });
+// };
 </script>
 
 <style scoped>
@@ -131,10 +125,11 @@ const copyAISuggestion = () => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 0 10px;
+  margin: 0 5px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   background-color: #ffffff;
+  overflow: hidden; /* 添加这行来防止内容溢出 */
 }
 
 .chat-window {
@@ -207,8 +202,27 @@ const copyAISuggestion = () => {
 }
 
 .ai-suggestion {
-  padding: 10px;
+  padding: 8px;
   border-top: 1px solid #e0e0e0;
+  height: 25%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-suggestion-content {
+  flex: 1;
+  padding: 10px;
+  background-color: #f5f7fa;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #606266;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  cursor: text;
+  user-select: text;
 }
 
 .suggestion-header {
