@@ -3,19 +3,19 @@ import { Menus } from '@/types/menu';
 export const menuData: Menus[] = [
   {
     id: '0',
-    title: '输赢对话AI解析看板',
+    title: '成单洞察可视化',
     index: '/dashboard',
     icon: 'Odometer',
   },
   {
     id: '1',
-    title: '对话助手',
+    title: '智能对话助手',
     index: '/system-saler',
     icon: 'HomeFilled',
   },
   {
     id: '1',
-    title: '进行中用户分析',
+    title: '用户健康度看板',
     index: '/system-role',
     icon: 'Odometer',
   },

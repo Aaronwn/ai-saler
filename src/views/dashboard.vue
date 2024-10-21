@@ -51,7 +51,7 @@
         <el-table-column prop="user" label="用户ID" width="120" />
         <el-table-column prop="follower" label="跟进人ID" width="120" />
         <el-table-column prop="callTime" label="通话时间" width="180" />
-        <el-table-column prop="reason" label="原因" />
+        <el-table-column prop="reason" label="对应话术" />
       </el-table>
     </el-drawer>
   </div>
