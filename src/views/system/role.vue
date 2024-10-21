@@ -2,16 +2,29 @@
   <div>
     <div class="container">
       <TableCustom :columns="columns" :tableData="tableData" :total="page.total" :page-change="changePage">
+        <template #healthScore="slotProps">
+          <el-tooltip :content="slotProps.rows.conclusion" placement="top">
+            <span>{{ slotProps.rows.healthScore }}</span>
+          </el-tooltip>
+        </template>
         <template #adviceList="slotProps">
-          <el-popover
-            placement="top-start"
-            title="建议列表"
-            :width="300"
-            trigger="hover"
-            :content="getAdviceContent(slotProps)">
+          <el-popover placement="top-start" title="" :width="300" trigger="hover">
             <template #reference>
               <el-button type="text">查看建议</el-button>
             </template>
+            <div>
+              <div><strong>正面：</strong></div>
+              <div v-if="slotProps.rows.positiveList.length">{{ formatList(slotProps.rows.positiveList) }}</div>
+              <div v-else>无</div>
+              <br />
+              <div><strong>负面：</strong></div>
+              <div v-if="slotProps.rows.negativeList.length">{{ formatList(slotProps.rows.negativeList) }}</div>
+              <div v-else>无</div>
+              <br />
+              <div><strong>沟通建议：</strong></div>
+              <div v-if="slotProps.rows.adviceList.length">{{ formatList(slotProps.rows.adviceList) }}</div>
+              <div v-else>无</div>
+            </div>
           </el-popover>
         </template>
       </TableCustom>
@@ -55,9 +68,8 @@ const tableData = ref<HealthScore[]>([]);
 const getData = async () => {
   try {
     const res = await fetchAIHealthScoreData(page.index, page.size);
-    console.log(123, res.data.data);
     tableData.value = res.data.data;
-    page.total = res.data.pageTotal;
+    page.total = res.data.data.length;
   } catch (error) {
     console.error('获取数据失败:', error);
   }
@@ -70,15 +82,8 @@ const changePage = (val: number) => {
   getData();
 };
 
-const getAdviceContent = (slotProps: any) => {
-  console.log('Slot props:', slotProps);
-  const row = slotProps.rows; // 直接使用 rows，不需要通过索引访问
-  console.log('Row data:', row);
-
-  if (!row || !row.adviceList || row.adviceList.length === 0) {
-    return '暂无建议';
-  }
-  return row.adviceList.join('\n');
+const formatList = (list: string[]) => {
+  return list.map((item, index) => `${index + 1}. ${item}`).join('\n');
 };
 </script>
 

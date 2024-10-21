@@ -21,8 +21,7 @@
           :rows="2"
           placeholder="请输入消息"
           @keydown.enter.exact.prevent="sendUserMessage"
-          @keydown.enter.shift.exact="newline"
-        ></el-input>
+          @keydown.enter.shift.exact="newline"></el-input>
         <el-button type="primary" @click="sendUserMessage">发送</el-button>
       </div>
     </div>
@@ -47,8 +46,7 @@
           :rows="2"
           placeholder="请输入消息"
           @keydown.enter.exact.prevent="sendSalesMessage"
-          @keydown.enter.shift.exact="newline"
-        ></el-input>
+          @keydown.enter.shift.exact="newline"></el-input>
         <el-button type="primary" @click="sendSalesMessage">发送</el-button>
       </div>
       <div class="ai-suggestion">
@@ -70,6 +68,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
+import { fetchAIChatAdvice } from '../../api/index'; // Import the function
 
 interface ChatMessage {
   type: 'user' | 'sales';
@@ -85,11 +84,18 @@ const userMessage = ref('');
 const salesMessage = ref('');
 const aiSuggestion = ref('建议您可以详细介绍一下我们的主打产品，包括其特点和优势。');
 
-
-
-const sendUserMessage = () => {
+const sendUserMessage = async () => {
   if (userMessage.value.trim()) {
     chatHistory.value.push({ type: 'user', content: userMessage.value });
+
+    try {
+      const res = await fetchAIChatAdvice({ content: chatHistory.value }); // Call the API
+      console.log(111, chatHistory.value);
+      aiSuggestion.value = res.data.data.suggestion; // Update AI suggestion
+    } catch (error) {
+      ElMessage.error('获取AI建议失败');
+    }
+
     userMessage.value = '';
   }
 };
