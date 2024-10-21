@@ -65,24 +65,19 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { fetchAIChatAdvice } from '../../api/index'; // Import the function
 
-interface ChatMessage {
-  type: 'user' | 'sales';
-  content: string;
-}
-
-const chatHistory = ref<ChatMessage[]>([
-  { type: 'user', content: '你好' },
-  { type: 'sales', content: '你好，请问有什么问题' },
+const chatHistory = ref([
+  // { type: 'user', content: '你好' },
+  // { type: 'sales', content: '你好，请问有什么问题' },
 ]);
 
 const userMessage = ref('');
 const salesMessage = ref('');
-const aiSuggestion = ref('建议您可以详细介绍一下我们的主打产品，包括其特点和优势。');
+const aiSuggestion = ref('');
 
 const sendUserMessage = async () => {
   if (userMessage.value.trim()) {
@@ -107,8 +102,8 @@ const sendSalesMessage = () => {
   }
 };
 
-const newline = (e: KeyboardEvent) => {
-  const target = e.target as HTMLTextAreaElement;
+const newline = e => {
+  const target = e.target;
   const start = target.selectionStart;
   const end = target.selectionEnd;
   const value = target.value;

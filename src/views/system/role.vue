@@ -32,19 +32,10 @@
   </div>
 </template>
 
-<script setup lang="ts" name="ai-health-score">
+<script setup name="ai-health-score">
 import { ref, reactive } from 'vue';
 import { fetchAIHealthScoreData } from '@/api'; // 假设您有这个 API 函数
 import TableCustom from '@/components/table-custom.vue';
-
-interface HealthScore {
-  user: string;
-  follower: string;
-  callTime: string;
-  callId: string;
-  healthScore: number;
-  adviceList: string[];
-}
 
 // 表格相关
 const columns = ref([
@@ -63,7 +54,7 @@ const page = reactive({
   total: 0,
 });
 
-const tableData = ref<HealthScore[]>([]);
+const tableData = ref([]);
 
 const getData = async () => {
   try {
@@ -77,12 +68,12 @@ const getData = async () => {
 
 getData();
 
-const changePage = (val: number) => {
+const changePage = (val) => {
   page.index = val;
   getData();
 };
 
-const formatList = (list: string[]) => {
+const formatList = (list) => {
   return list.map((item, index) => `${index + 1}. ${item}`).join('\n');
 };
 </script>

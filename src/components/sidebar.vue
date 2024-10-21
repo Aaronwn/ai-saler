@@ -71,7 +71,7 @@ const sidebar = useSidebarStore();
     display: block;
     position: absolute;
     left: 0;
-    top: 70px;
+    top: 69px;
     bottom: 0;
     overflow-y: scroll;
 }

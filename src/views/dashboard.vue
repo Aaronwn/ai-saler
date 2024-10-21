@@ -57,7 +57,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -70,7 +70,6 @@ import {
   DataZoomComponent,
 } from 'echarts/components';
 import VChart from 'vue-echarts';
-import type { EChartsOption } from 'echarts';
 import { fetchUserTagsData } from '@/api';
 
 use([CanvasRenderer, BarChart, GridComponent, TooltipComponent, LegendComponent, TitleComponent, DataZoomComponent]);
@@ -91,7 +90,7 @@ const drawerVisible = ref(false);
 const selectedTag = ref('');
 const selectedRole = ref('');
 
-const createChartOption = (color: string): EChartsOption => ({
+const createChartOption = (color) => ({
   tooltip: {
     trigger: 'axis',
     axisPointer: { type: 'shadow' },
@@ -147,11 +146,11 @@ const createChartOption = (color: string): EChartsOption => ({
   ],
 });
 
-const salesTagsOpt = ref<EChartsOption>(createChartOption('#3aa1ff')); // 蓝色
-const userTagsOpt = ref<EChartsOption>(createChartOption('#4caf50')); // 绿色
+const salesTagsOpt = ref(createChartOption('#3aa1ff')); // 蓝色
+const userTagsOpt = ref(createChartOption('#4caf50')); // 绿色
 
 // 获取标签数据
-const getTagsData = async (role: string) => {
+const getTagsData = async (role) => {
   try {
     const params = {
       role,
@@ -177,8 +176,11 @@ const getTagsData = async (role: string) => {
 };
 
 // 更新图表数据
-const updateChartData = (chartOpt: EChartsOption, data: any[]) => {
-  chartOpt.xAxis.data = data.map(item => item.tag);
+const updateChartData = (chartOpt, data) => {
+  chartOpt.xAxis = {
+    type: 'category',
+    data: data.map(item => item.tag),
+  };
   chartOpt.series[0].data = data.map(item => item.total);
 
   // 动态调整图表高度
@@ -188,7 +190,7 @@ const updateChartData = (chartOpt: EChartsOption, data: any[]) => {
   const calculatedHeight = Math.min(Math.max(baseHeight, data.length * itemHeight), maxHeight);
 
   const chartElements = document.querySelectorAll('.chart');
-  chartElements.forEach((element: HTMLElement) => {
+  chartElements.forEach(element => {
     element.style.height = `${calculatedHeight}px`;
   });
 
@@ -203,7 +205,7 @@ const updateChartData = (chartOpt: EChartsOption, data: any[]) => {
 };
 
 // 处理图表点击事件
-const handleChartClick = (role: string, params: any) => {
+const handleChartClick = (role, params) => {
   if (params.componentType === 'series') {
     selectedTag.value = params.name;
     selectedRole.value = role;
@@ -221,7 +223,7 @@ const selectedTagRecords = computed(() => {
 });
 
 // 添加日志输出，用于调试
-watch(selectedTagRecords, newValue => {
+watch(selectedTagRecords, (newValue) => {
   console.log('Selected tag records:', newValue);
 });
 
