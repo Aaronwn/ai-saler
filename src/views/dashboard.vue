@@ -21,7 +21,7 @@
       <el-col :span="24">
         <el-card shadow="hover">
           <div class="card-header">
-            <p class="card-header-title">赢单销售分析</p>
+            <p class="card-header-title">销售话术标签</p>
             <p class="card-header-desc">各标签命中数量统计</p>
           </div>
           <v-chart class="chart" :option="salesTagsOpt" @click="params => handleChartClick('sale', params)" />
@@ -34,7 +34,7 @@
       <el-col :span="24">
         <el-card shadow="hover">
           <div class="card-header">
-            <p class="card-header-title">赢单用户分析</p>
+            <p class="card-header-title">用户特征标签</p>
             <p class="card-header-desc">各标签命中用户数量统计</p>
           </div>
           <v-chart class="chart" :option="userTagsOpt" @click="params => handleChartClick('user', params)" />
@@ -90,7 +90,7 @@ const drawerVisible = ref(false);
 const selectedTag = ref('');
 const selectedRole = ref('');
 
-const createChartOption = (color) => ({
+const createChartOption = color => ({
   tooltip: {
     trigger: 'axis',
     axisPointer: { type: 'shadow' },
@@ -150,7 +150,7 @@ const salesTagsOpt = ref(createChartOption('#3aa1ff')); // 蓝色
 const userTagsOpt = ref(createChartOption('#4caf50')); // 绿色
 
 // 获取标签数据
-const getTagsData = async (role) => {
+const getTagsData = async role => {
   try {
     const params = {
       role,
@@ -223,7 +223,7 @@ const selectedTagRecords = computed(() => {
 });
 
 // 添加日志输出，用于调试
-watch(selectedTagRecords, (newValue) => {
+watch(selectedTagRecords, newValue => {
   console.log('Selected tag records:', newValue);
 });
 

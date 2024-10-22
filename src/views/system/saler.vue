@@ -1,6 +1,10 @@
 <template>
   <div class="chat-assistant">
     <div class="chat-area user-side">
+      <div class="chat-header">
+        <i class="el-icon-user"></i>
+        <span>用户侧</span>
+      </div>
       <div class="chat-window" ref="userChatWindow">
         <div
           v-for="(message, index) in chatHistory"
@@ -26,6 +30,10 @@
       </div>
     </div>
     <div class="chat-area sales-side">
+      <div class="chat-header">
+        <i class="el-icon-service"></i>
+        <span>销售侧</span>
+      </div>
       <div class="chat-window" ref="salesChatWindow">
         <div
           v-for="(message, index) in chatHistory"
@@ -50,10 +58,7 @@
         <el-button type="primary" @click="sendSalesMessage">发送</el-button>
       </div>
       <div class="ai-suggestion">
-        <div
-          class="ai-suggestion-content"
-          v-text="aiSuggestion || 'AI 建议将显示在这里'"
-        ></div>
+        <div class="ai-suggestion-content" v-text="aiSuggestion || 'AI 建议将显示在这里'"></div>
       </div>
     </div>
   </div>
@@ -85,6 +90,7 @@ const scrollToBottom = () => {
 const sendUserMessage = async () => {
   if (userMessage.value.trim()) {
     chatHistory.value.push({ type: 'user', content: userMessage.value });
+    userMessage.value = '';
     scrollToBottom();
 
     try {
@@ -93,8 +99,6 @@ const sendUserMessage = async () => {
     } catch (error) {
       ElMessage.error('获取AI建议失败');
     }
-
-    userMessage.value = '';
   }
 };
 
@@ -107,9 +111,13 @@ const sendSalesMessage = () => {
 };
 
 // Watch for changes in chatHistory and scroll both sides to bottom
-watch(chatHistory, () => {
-  scrollToBottom();
-}, { deep: true });
+watch(
+  chatHistory,
+  () => {
+    scrollToBottom();
+  },
+  { deep: true }
+);
 
 // Scroll both sides to bottom on initial load
 onMounted(() => {
@@ -150,6 +158,29 @@ const newline = e => {
   border-radius: 8px;
   background-color: #ffffff;
   overflow: hidden; /* 添加这行来防止内容溢出 */
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  font-weight: bold;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.chat-header i {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.user-side .chat-header {
+  background-color: #e8f5fe;
+  color: #1890ff;
+}
+
+.sales-side .chat-header {
+  background-color: #f6ffed;
+  color: #52c41a;
 }
 
 .chat-window {

@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
         path: '/dashboard',
         name: 'dashboard',
         meta: {
-          title: '输赢对话AI解析看板',
+          title: '成单洞察可视化',
           noAuth: true,
         },
         component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
         path: '/system-saler',
         name: 'system-saler',
         meta: {
-          title: '对话助手',
+          title: '智能对话助手',
           permiss: '11',
           noAuth: true,
         },
@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
         path: '/system-role',
         name: 'system-role',
         meta: {
-          title: '进行中用户分析',
+          title: '用户意向度看板',
           permiss: '12',
           noAuth: true,
         },

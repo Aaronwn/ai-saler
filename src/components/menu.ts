@@ -15,7 +15,7 @@ export const menuData: Menus[] = [
   },
   {
     id: '1',
-    title: '用户健康度看板',
+    title: '用户意向度看板',
     index: '/system-role',
     icon: 'Odometer',
   },
