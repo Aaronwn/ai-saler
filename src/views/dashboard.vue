@@ -162,6 +162,13 @@ const getTagsData = async role => {
     if (res.data.state === 10000) {
       if (role === 'sale') {
         salesTagsData.value = res.data.data;
+        // 把标签名称为"灵活的课程安排"的标签数据放在第一位，并移除原来的位置(演示demo用，正式环境不要)
+        const flexibleCourseArrangementIndex = salesTagsData.value.findIndex(item => item.tag === '灵活的课程安排');
+        if (flexibleCourseArrangementIndex !== -1) {
+          const [flexibleCourseArrangement] = salesTagsData.value.splice(flexibleCourseArrangementIndex, 1);
+          salesTagsData.value.unshift(flexibleCourseArrangement);
+        }
+
         updateChartData(salesTagsOpt.value, salesTagsData.value);
       } else {
         userTagsData.value = res.data.data;
@@ -217,6 +224,67 @@ const handleChartClick = (role, params) => {
 
 // 计算属性：根据选中的标签筛选对应的通话记录
 const selectedTagRecords = computed(() => {
+  // 演示demo用，后面正式环境不需要
+  const testReasonList = [
+    {
+      user: 'User-59231788',
+      follower: 'Follower-4103952',
+      callTime: '2024-05-07 08:35:21',
+      reason:
+        '然后我们是上课时间是从早上6点到到晚上24点，整点或者半点开课，您可以根据您自己的时间，自己的情况的话去选择对应的课程。',
+    },
+    {
+      user: 'User-59234564',
+      follower: 'Follower-4103952',
+      callTime: '2024-05-07 9:40:51',
+      reason:
+        '时间的话，根据您的时间嘛，然后你如果说你想你想要固定几个老师，那你可以提前把时间的话给他确定下来，然后提前去约。如果您可以就不固定老师，那你这边的话，时间就不用提前去约。',
+    },
+    {
+      user: 'User-59223242',
+      follower: 'Follower-4088624',
+      callTime: '2024-05-07 09:45:32',
+      reason: '根据孩子当下的能力水平，咱们可以灵活调整上课内容和难度的。',
+    },
+    {
+      user: 'User-59233374',
+      follower: 'Follower-4103952',
+      callTime: '2024-05-07 10:01:45',
+      reason:
+        '上课的话根据您自己的情况呀，比如说您现在有时间，那您现在立马就可以安排，我们是提前半个小时约课，整点或者半点安排课程，那您现在的话到呃7点半之前都是可以安排8点钟的课嘛。',
+    },
+    {
+      user: 'User-59223242',
+      follower: 'Follower-4088624',
+      callTime: '2024-05-07 14:26:05',
+      reason: '当然当然，从男老师女老师教学风格、教学经验、教学年限这些都可以帮你去筛选。',
+    },
+    {
+      user: 'User-59223242',
+      follower: 'Follower-4088624',
+      callTime: '2024-05-08 14:26:05',
+      reason:
+        '我们一节课是25分钟，然后呢整点半点都可以上。最晚提前半小时预约，对最晚提前一小时可以免费取消，早十晚十可以安排试听课，然后正式课的话呢，是早六晚24。',
+    },
+    {
+      user: 'User-59223242',
+      follower: 'Follower-4088624',
+      callTime: '2024-05-08 14:26:05',
+      reason: '可以呀，我们早六晚二十四整点半点都可以上的。',
+    },
+    {
+      user: 'User-59221503',
+      follower: 'Follower-10572',
+      callTime: '2024-06-10 10:33:27',
+      reason:
+        '再就是，嗯，对课程教材的话，因为昨天跟咱们大概讲过嘛，就学那个主修课经典英语，那顺着这边往后学，如果说简单难，随时可以调适合孩子为准。',
+    },
+  ];
+  //   如果 selectedRole.value === 'sale' ， 当前点击的标签为 '灵活的课程安排', 则返回上面的 testReasonList
+  if (selectedRole.value === 'sale' && selectedTag.value === '灵活的课程安排') {
+    return testReasonList;
+  }
+
   const data = selectedRole.value === 'sale' ? salesTagsData.value : userTagsData.value;
   const selectedData = data.find(item => item.tag === selectedTag.value);
   return selectedData ? selectedData.reasonList : [];
