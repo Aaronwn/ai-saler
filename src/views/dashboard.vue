@@ -281,9 +281,9 @@ const selectedTagRecords = computed(() => {
     },
   ];
   //   如果 selectedRole.value === 'sale' ， 当前点击的标签为 '灵活的课程安排', 则返回上面的 testReasonList
-  if (selectedRole.value === 'sale' && selectedTag.value === '灵活的课程安排') {
-    return testReasonList;
-  }
+  // if (selectedRole.value === 'sale' && selectedTag.value === '灵活的课程安排') {
+  //   return testReasonList;
+  // }
 
   const data = selectedRole.value === 'sale' ? salesTagsData.value : userTagsData.value;
   const selectedData = data.find(item => item.tag === selectedTag.value);
